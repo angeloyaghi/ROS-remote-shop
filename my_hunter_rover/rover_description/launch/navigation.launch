@@ -1,0 +1,26 @@
+<launch>
+  <!-- Load the map -->
+  <arg name="map_file" default="/home/lea/catkin_ws/shop.yaml"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)">
+    <param name="frame_id" value="map"/>
+  </node>
+
+  <!-- GUI node -->
+  <!-- <include file="$(find rover_description)/launch/gui.launch"/> -->
+
+  <!-- Navigation goal node -->
+  <node name="navigation_goal" pkg="rover_description" type="coordinates.py" output="screen"/>
+
+  <!-- Spawn the rover -->
+  <include file="$(find rover_description)/launch/spawn.launch"/>
+
+  <!-- AMCL -->
+  <include file="$(find rover_description)/launch/amcl.launch"/>
+
+  <!-- move base package -->
+  <include file="$(find rover_description)/launch/move_base.launch"/>
+
+  <!-- rviz -->
+  <include file="$(find rover_description)/launch/rviz.launch"/>
+
+</launch>

@@ -1,0 +1,12 @@
+# Costmap common parameters
+obstacle_range: 5      # Range at which obstacles will be inserted into the cost map
+raytrace_range: 5      # Range at which to raytrace free space for the cost map
+footprint: [[-0.50, -0.35], [-0.50, 0.35], [0.50, 0.35], [0.50, -0.35]]   # Robot footprint (x, y coordinates of each point)
+robot_radius: 0.4       # Robot radius (used for inflation)
+inflation_radius: 0.5   # Inflation radius (used for costmap inflation)
+cost_scaling_factor: 3
+robot_base_frame: link_chassis
+map_type: costmap
+observation_sources: scan #point_cloud_sensor
+
+scan: {sensor_frame: laser_link, data_type: LaserScan, topic: scan, marking: true, clearing: true}

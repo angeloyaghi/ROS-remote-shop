@@ -1,0 +1,3 @@
+<launch>
+    <node name="gui" pkg="rover_description" type="main.py"/>
+</launch>

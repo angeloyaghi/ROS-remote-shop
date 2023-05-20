@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <!-- Arguments -->
+  <arg name="world" default="$(find rover_description)/worlds/new_world.world"/>
+  <arg name="paused" default="true"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="recording" default="false"/>
+  <arg name="debug" default="false"/>
+
+   <!-- MoveIt options -->
+  <arg name="pipeline" default="ompl" doc="Planning pipeline to use with MoveIt"/>
+
+  <!-- Launch Gazebo and spawn the robot -->
+  <include file="$(find ur5_gripper_moveit_config)/launch/gazebo2_f.launch" pass_all_args="true"/>
+
+  <!-- Robot description from urdf -->
+  <!-- <param name="robot_description" command="$(find xacro)/xacro '$(find rover_description)/urdf/rover.xacro'"/> -->
+
+  <!-- Combine joint values -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+
+  <!-- Send joint values -->
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+
+  <!-- Launch MoveIt -->
+  <include file="$(find ur5_gripper_moveit_config)/launch/demo.launch" pass_all_args="true">
+    <!-- robot_description is loaded by gazebo.launch, to enable Gazebo features -->
+    <arg name="load_robot_description" value="false" />
+    <arg name="moveit_controller_manager" value="ros_control" />
+  </include>
+  
+  <!-- Gazebo launch file -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(arg world)"/>
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="recording" value="$(arg recording)"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>
+
+  <arg name="x" default="0" />
+  <arg name="y" default="0" />
+  <arg name="z" default="0.3" />
+
+  <!-- Gazebo Simulator -->
+  <node name="rover_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" 
+    args="-urdf -param robot_description -model rover -x $(arg x) -y $(arg y) -z $(arg z)
+                  -J shoulder_pan_joint 0.0
+                  -J shoulder_lift_joint -1.57075
+                  -J elbow_joint 0.0
+                  -J wrist_1_joint -1.57075
+                  -J wrist_2_joint 0.0 
+                  -J wrist_3_joint 0.0"/>
+
+  <param name="map_frame" value="map"/>
+
+
+</launch>
